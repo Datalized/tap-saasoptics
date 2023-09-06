@@ -314,6 +314,15 @@
     },
     "type": {
       "type": ["null", "string"]
+    },
+    "c_emitida": {
+      "type": ["null", "boolean"]
+    },
+    "c_emitida_por": {
+        "type": ["null", "string"]
+    },
+    "c_orden_de_compra": {
+        "type": ["null", "string"]
     }
   }
 }

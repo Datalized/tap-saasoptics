@@ -244,6 +244,12 @@
     },
     "unbalanced_revenue_exception": {
       "type": ["null", "boolean"]
+    },
+    "c_metrics": {
+      "type": ["null", "boolean"]
+    },
+    "c_razon_churndownsell": {
+      "type": ["null", "boolean"]
     }
   }
 }

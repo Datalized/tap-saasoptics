@@ -252,6 +252,15 @@
     },
     "unbalanced_revenue_exception": {
       "type": ["null", "boolean"]
+    },
+    "c_contract_signed": {
+      "type": ["null", "string"]
+    },
+    "c_osmos_historico": {
+      "type": ["null", "string"]
+    },
+    "c_sales_rep": {
+      "type": ["null", "string"]
     }
   }
 }
