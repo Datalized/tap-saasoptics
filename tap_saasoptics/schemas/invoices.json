@@ -161,9 +161,6 @@
               "no_transaction_permitted": {
                 "type": ["null", "boolean"]
               },
-              "notes": {
-                "type": ["null", "string"]
-              },
               "number": {
                 "type": ["null", "string"]
               },
