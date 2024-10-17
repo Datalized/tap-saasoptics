@@ -19,11 +19,41 @@ REQUIRED_CONFIG_KEYS = [
     'user_agent'
 ]
 
-def do_discover():
 
+def add_metadata(catalog_dict):
+    for i in range(0, len(catalog_dict["streams"])):
+        stream = catalog_dict["streams"][i]["stream"]
+        if catalog_dict["streams"][i].get("key_properties") is None:
+            catalog_dict["streams"][i]["key_properties"] = ["id"]
+        if catalog_dict["streams"][i].get("metadata") is None:
+            metadata = []
+            for key in catalog_dict["streams"][i]["schema"].get("properties", {}).keys():
+                metadata.append(
+                    {
+                        "breadcrumb": [
+                            "properties",
+                            key,
+                        ],
+                        "metadata": {
+                            "inclusion": "available",
+                            # Examples of additional entries
+                            # "table-key-properties": ["id"],
+                            # "forced-replication-method": "INCREMENTAL",
+                            # "valid-replication-keys": ["modified"],
+                        },
+                    }
+                )
+                catalog_dict["streams"][i]["metadata"] = metadata
+    return catalog_dict
+
+
+def do_discover(schema_dir, is_full_sync=False):
     LOGGER.info('Starting discover')
-    catalog = discover()
-    json.dump(catalog.to_dict(), sys.stdout, indent=2)
+    catalog = discover(schema_dir, is_full_sync)
+    catalog_dict = catalog.to_dict()
+    # Need to add metadata and key_properties
+    catalog_dict = add_metadata(catalog_dict)
+    json.dump(catalog_dict, sys.stdout, indent=2)
     LOGGER.info('Finished discover')
 
 
@@ -37,17 +67,26 @@ def main():
                           parsed_args.config['server_subdomain'],
                           parsed_args.config['user_agent']) as client:
 
+        is_full_sync = parsed_args.config.get("full_sync", "full_sync")
+
+        if is_full_sync:
+            LOGGER.info('Running on full-sync mode')
+        else:
+            LOGGER.info('Running on incremental-sync mode')
+
+        schema_dir = parsed_args.config.get("schema_dir", "schemas")
         state = {}
         if parsed_args.state:
             state = parsed_args.state
 
         if parsed_args.discover:
-            do_discover()
+            do_discover(schema_dir, is_full_sync=is_full_sync)
         elif parsed_args.catalog:
             sync(client=client,
                  config=parsed_args.config,
                  catalog=parsed_args.catalog,
-                 state=state)
+                 state=state,
+                 is_full_sync=is_full_sync)
 
 if __name__ == '__main__':
     main()

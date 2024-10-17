@@ -1,8 +1,10 @@
 from singer.catalog import Catalog, CatalogEntry, Schema
-from tap_saasoptics.schema import get_schemas, STREAMS
+from tap_saasoptics.schema import get_schemas
+from tap_saasoptics.streams import STREAMS
 
-def discover():
-    schemas, field_metadata = get_schemas()
+
+def discover(schema_dir="schemas", is_full_sync=False):
+    schemas, field_metadata = get_schemas(schema_dir, is_full_sync)
     catalog = Catalog([])
 
     for stream_name, schema_dict in schemas.items():

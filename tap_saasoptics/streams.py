@@ -49,7 +49,7 @@ STREAMS = {
     'transactions': {
         'key_properties': ['id'],
         'replication_method': 'INCREMENTAL',
-        'replication_keys': ['modified'],
+        'replication_keys': ['auditentry_modified'],
         'bookmark_query_field_from': 'auditentry__modified__gte',
         'bookmark_query_field_to': 'auditentry__modified__lte',
         'bookmark_type': 'datetime'
@@ -77,6 +77,14 @@ STREAMS = {
     'currency_codes': {
         'key_properties': ['code'],
         'replication_method': 'FULL_TABLE'
+    },
+    'payments': {
+        'key_properties': ['id'],
+        'replication_method': 'INCREMENTAL',
+        'replication_keys': ['modified'],
+        'bookmark_query_field_from': 'modified__gte',
+        'bookmark_query_field_to': 'modified__lte',
+        'bookmark_type': 'datetime'
     },
     'payment_terms': {
         'key_properties': ['id'],
@@ -133,5 +141,12 @@ STREAMS = {
         'replication_method': 'INCREMENTAL',
         'replication_keys': ['deleted'],
         'bookmark_type': 'datetime'
-    }
+    },
+    'deleted_customers': {
+       'path': 'customers/deleted',
+       'key_properties': ['id'],
+       'replication_method': 'INCREMENTAL',
+       'replication_keys': ['deleted'],
+       'bookmark_type': 'datetime'
+   }
 }
